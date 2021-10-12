@@ -38,3 +38,9 @@ Dockerfile is available.
 ```bash
 docker build -t kafka-to-sendgrid-py .
 ```
+
+## SendGrid Dynamic Template
+
+This script is assuming to receive messages as a json text via Kafka, then setting following two items as dynamic template data for SendGrid when `--sendgrid-template-id` is presetnt.
++ "content" : message as json object (you can use Handlebars)
++ "json" : message as json text 
