@@ -28,6 +28,7 @@ optional arguments:
   --kafka-topic KAFKA_TOPIC
   --kafka-group-id KAFKA_GROUP_ID 
                         default is my-group
+  --no-forwarding       only consume messages, no forwarding
 ```
 
 

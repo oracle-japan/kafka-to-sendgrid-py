@@ -59,6 +59,7 @@ def main():
                 help='list of Kafka bootstrap servers delimited by ",", default is localhost:9092')
     parser.add_argument('--kafka-topic', required=True)
     parser.add_argument('--kafka-group-id', default='my-group', help='default is my-group')
+    parser.add_argument("--no-forwarding", action="store_true", help="only consume messages, no forwarding")
     args = parser.parse_args()
     print(args)
 
@@ -67,16 +68,17 @@ def main():
     consumer = KafkaConsumer(
                         args.kafka_topic,
                         group_id = args.kafka_group_id,
-                        bootstrap_servers = args.kafka_bootstrap_servers.split(','),
-                        enable_auto_commit=False)
+                        bootstrap_servers = args.kafka_bootstrap_servers.split(','))
 
     sg = sendgrid.SendGridAPIClient(args.sendgrid_apikey)
 
     for message in consumer:
         print('----- new message -----')
         print(f'{message.topic}:{message.partition}:{message.offset}: key={message.key} value={message.value}')
-        send_mail(message.value.decode('utf-8'), args, sg)
-        consumer.commit()
+        if(args.no_forwarding):
+            print('[no-forwarding]')
+        else:
+            send_mail(message.value.decode('utf-8'), args, sg)
 
 if __name__ == '__main__':
     main()
